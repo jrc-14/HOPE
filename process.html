@@ -1,0 +1,926 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Our Process</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Figtree:wght@400;500;600&family=Archivo+Black&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #0d1226;
+        --ink: #eef0ff;
+        --muted: #a9b0d6;
+        --card: rgba(255, 255, 255, 0.06);
+        --line: rgba(255, 255, 255, 0.14);
+        --signal: #8b6cff;
+        --mint: #5de0c0;
+        --amber: #ffb454;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font:
+          400 1.05rem/1.65 Figtree,
+          system-ui,
+          sans-serif;
+      }
+      h1,
+      h2,
+      h3 {
+        font-family: "Bricolage Grotesque", Figtree, sans-serif;
+        line-height: 1.1;
+        margin: 0 0 0.5em;
+      }
+
+      /* ---- 3D background: perspective grid floor + drifting glows ---- */
+      .bg {
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        overflow: hidden;
+        background: radial-gradient(
+          ellipse at 50% 0%,
+          #1b2150 0%,
+          var(--bg) 65%
+        );
+        perspective: 500px;
+      }
+      .floor {
+        position: absolute;
+        left: -50%;
+        width: 200%;
+        bottom: -10%;
+        height: 75%;
+        transform: rotateX(68deg);
+        transform-origin: 50% 100%;
+        background-image:
+          linear-gradient(var(--signal) 1px, transparent 1px),
+          linear-gradient(90deg, var(--signal) 1px, transparent 1px);
+        background-size: 70px 70px;
+        opacity: 0.35;
+        animation: fly 3.5s linear infinite;
+        -webkit-mask-image: linear-gradient(to top, #000 20%, transparent 95%);
+        mask-image: linear-gradient(to top, #000 20%, transparent 95%);
+      }
+      @keyframes fly {
+        to {
+          background-position: 0 70px;
+        }
+      }
+      .orb {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(70px);
+        opacity: 0.45;
+        animation: drift 18s ease-in-out infinite alternate;
+      }
+      .o1 {
+        width: 38vw;
+        height: 38vw;
+        background: var(--signal);
+        top: -8%;
+        left: -6%;
+      }
+      .o2 {
+        width: 30vw;
+        height: 30vw;
+        background: var(--mint);
+        top: 30%;
+        right: -8%;
+        animation-delay: -6s;
+        opacity: 0.28;
+      }
+      .o3 {
+        width: 24vw;
+        height: 24vw;
+        background: var(--amber);
+        bottom: 5%;
+        left: 25%;
+        animation-delay: -11s;
+        opacity: 0.18;
+      }
+      @keyframes drift {
+        to {
+          transform: translate3d(8vw, 6vh, 0) scale(1.2);
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .floor,
+        .orb {
+          animation: none;
+        }
+        html {
+          scroll-behavior: auto;
+        }
+      }
+
+      /* ---- "Process" being built ---- */
+      .sr {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+      }
+      .build {
+        margin-bottom: 1.5rem;
+      }
+      #build {
+        display: block;
+        width: 100%;
+        height: clamp(110px, 22vw, 200px);
+      }
+      .wrap {
+        max-width: 1080px;
+        margin: 0 auto;
+        padding: 0 1.5rem;
+      }
+      header.hero {
+        padding: 3.5rem 0 3rem;
+      }
+      h1 {
+        font-size: clamp(2.8rem, 8vw, 5.5rem);
+        font-weight: 800;
+        letter-spacing: -0.03em;
+      }
+      .lead {
+        max-width: 34em;
+        color: var(--muted);
+        font-size: 1.2rem;
+      }
+      section {
+        padding: 3rem 0;
+      }
+      h2 {
+        font-size: clamp(1.7rem, 4vw, 2.4rem);
+        font-weight: 700;
+      }
+      p {
+        max-width: 62ch;
+      }
+
+      /* ---- Steps in a row ---- */
+      .row-hint {
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+      .steps {
+        display: flex;
+        gap: 1rem;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        padding: 1rem 1.5rem 1.5rem;
+        margin: 0 -1.5rem;
+        list-style: none;
+      }
+      .steps li {
+        flex: 0 0 min(280px, 80vw);
+        scroll-snap-align: start;
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 1.25rem;
+        backdrop-filter: blur(8px);
+      }
+      .steps li:nth-child(even) {
+        border-radius: 14px 14px 14px 36px;
+      }
+      .steps b {
+        display: block;
+        font:
+          800 2.2rem "Bricolage Grotesque",
+          sans-serif;
+        color: var(--mint);
+        margin-bottom: 0.25rem;
+      }
+      .steps h3 {
+        font-size: 1.2rem;
+      }
+      .steps p {
+        font-size: 0.95rem;
+        color: var(--muted);
+        margin: 0;
+      }
+      .steps .paid {
+        border-color: var(--amber);
+      }
+      .note {
+        border-left: 3px solid var(--amber);
+        padding: 0.25rem 1rem;
+        color: var(--muted);
+      }
+      .done {
+        font:
+          800 clamp(1.6rem, 4vw, 2.4rem)/1.1 "Bricolage Grotesque",
+          sans-serif;
+        color: var(--mint);
+        margin-top: 1.5rem;
+      }
+
+      /* ---- Content blocks ---- */
+      .two {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+      }
+      .panel {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 1.5rem;
+      }
+      .panel h3 {
+        font-size: 1.25rem;
+      }
+      .panel p,
+      .panel li {
+        color: var(--muted);
+      }
+      ul.tick {
+        padding: 0;
+        list-style: none;
+      }
+      ul.tick li {
+        padding-left: 1.6rem;
+        position: relative;
+        margin: 0.5rem 0;
+      }
+      ul.tick li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0.6em;
+        width: 0.7rem;
+        height: 0.4rem;
+        border-left: 2px solid var(--mint);
+        border-bottom: 2px solid var(--mint);
+        transform: rotate(-45deg);
+      }
+      blockquote {
+        margin: 0;
+        font-size: 1.05rem;
+      }
+      cite {
+        display: block;
+        margin-top: 0.75rem;
+        color: var(--ink);
+        font-style: normal;
+        font-weight: 600;
+      }
+      .tag {
+        display: inline-block;
+        font-size: 0.8rem;
+        padding: 0.1rem 0.6rem;
+        border: 1px dashed var(--amber);
+        border-radius: 99px;
+        color: var(--amber);
+        margin-bottom: 0.75rem;
+      }
+
+      details {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 1rem 1.25rem;
+        margin: 0.75rem 0;
+        max-width: 760px;
+      }
+      summary {
+        cursor: pointer;
+        font-weight: 600;
+      }
+      details p {
+        margin: 0.75rem 0 0;
+        color: var(--muted);
+      }
+      summary:focus-visible,
+      a:focus-visible {
+        outline: 2px solid var(--mint);
+        outline-offset: 3px;
+      }
+
+      .cta {
+        text-align: center;
+        padding: 4rem 0 6rem;
+      }
+      .cta p {
+        margin: 0 auto 1.5rem;
+        color: var(--muted);
+      }
+      .btn {
+        display: inline-block;
+        background: var(--signal);
+        color: #fff;
+        text-decoration: none;
+        font-weight: 600;
+        padding: 0.9rem 1.8rem;
+        border-radius: 99px;
+        transition:
+          transform 0.2s,
+          background 0.2s;
+      }
+      .btn:hover {
+        background: #9c82ff;
+        transform: translateY(-2px);
+      }
+      .btn.alt {
+        background: transparent;
+        border: 1px solid var(--line);
+        margin-left: 0.5rem;
+      }
+
+      /* ---- Top bar ---- */
+      html {
+        scroll-padding-top: 5rem;
+      }
+      .top {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        background: rgba(8, 11, 22, 0.88);
+        border-bottom: 1px solid var(--line);
+      }
+      .top .in {
+        max-width: 1080px;
+        margin: 0 auto;
+        padding: 0.9rem 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        position: relative;
+      }
+      .brand {
+        font:
+          400 1.9rem/1 "Archivo Black",
+          Impact,
+          sans-serif;
+        letter-spacing: 0.06em;
+        color: #fff;
+        text-decoration: none;
+        text-shadow:
+          -1px 0 rgba(255, 60, 90, 0.7),
+          1px 0 rgba(0, 200, 255, 0.7);
+      }
+      .brand i {
+        font-style: normal;
+        color: #29b6f6;
+        text-shadow: none;
+      }
+      .top nav {
+        margin-left: auto;
+      }
+      .top ul {
+        display: flex;
+        gap: 0.3rem;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+      .top nav a {
+        display: block;
+        padding: 0.5rem 0.9rem;
+        border-radius: 99px;
+        color: var(--muted);
+        text-decoration: none;
+        font-weight: 500;
+      }
+      .top nav a:hover {
+        color: #fff;
+        background: var(--card);
+      }
+      .top nav a[aria-current="page"] {
+        color: #fff;
+        background: rgba(139, 108, 255, 0.25);
+      }
+      .talk {
+        border: 1px solid #6d4cff;
+        border-radius: 14px;
+        padding: 0.65rem 1.2rem;
+        color: #c3c9e6;
+        text-decoration: none;
+        font-size: 1.05rem;
+        white-space: nowrap;
+        transition:
+          background 0.2s,
+          color 0.2s;
+      }
+      .talk:hover {
+        background: rgba(109, 76, 255, 0.22);
+        color: #fff;
+      }
+      .menu {
+        display: none;
+        background: none;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        width: 44px;
+        height: 44px;
+        padding: 0;
+        cursor: pointer;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 5px;
+      }
+      .menu span {
+        width: 20px;
+        height: 2px;
+        background: var(--ink);
+        border-radius: 2px;
+      }
+      .top a:focus-visible,
+      .menu:focus-visible {
+        outline: 2px solid var(--mint);
+        outline-offset: 3px;
+      }
+      @media (max-width: 760px) {
+        .top .in {
+          padding: 0.7rem 1.1rem;
+        }
+        .brand {
+          font-size: 1.5rem;
+        }
+        .talk {
+          margin-left: auto;
+          padding: 0.5rem 0.9rem;
+          font-size: 0.95rem;
+        }
+        .menu {
+          display: flex;
+        }
+        .top nav {
+          display: none;
+          position: absolute;
+          left: 0;
+          right: 0;
+          top: 100%;
+          margin: 0;
+          background: rgba(8, 11, 22, 0.98);
+          border-bottom: 1px solid var(--line);
+          padding: 0.5rem 1.1rem 1rem;
+        }
+        .top nav.open {
+          display: block;
+        }
+        .top ul {
+          flex-direction: column;
+        }
+        .top nav a {
+          padding: 0.8rem 0.9rem;
+        }
+      }
+
+      /* ---- Mobile ---- */
+      html {
+        -webkit-text-size-adjust: 100%;
+      }
+      .steps {
+        overscroll-behavior-x: contain;
+      }
+      @media (max-width: 600px) {
+        header.hero {
+          padding: 2rem 0 2rem;
+        }
+        section {
+          padding: 2rem 0;
+        }
+        .orb {
+          filter: blur(45px);
+          will-change: transform;
+        }
+        .o1 {
+          width: 70vw;
+          height: 70vw;
+        }
+        .o2 {
+          width: 60vw;
+          height: 60vw;
+        }
+        .o3 {
+          width: 50vw;
+          height: 50vw;
+        }
+        .steps li {
+          backdrop-filter: none;
+          background: rgba(26, 32, 70, 0.8);
+        }
+        .panel {
+          padding: 1.1rem;
+        }
+        details {
+          padding: 0.9rem 1rem;
+        }
+        .cta {
+          padding: 3rem 0 4rem;
+        }
+        .btn {
+          display: block;
+          max-width: 320px;
+          margin: 0.7rem auto 0;
+        }
+        .btn.alt {
+          margin-left: auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="bg" aria-hidden="true">
+      <div class="orb o1"></div>
+      <div class="orb o2"></div>
+      <div class="orb o3"></div>
+      <div class="floor"></div>
+    </div>
+
+    <div class="top" id="top">
+      <div class="in">
+        <a class="brand" href="#top" aria-label="Hope, back to top"
+          >HOPE<i>.</i></a
+        >
+        <nav id="nav" aria-label="Main">
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="services.html">Services</a></li>
+            <li><a href="process.html" aria-current="page">Process</a></li>
+            <li><a href="work.html">Work</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </nav>
+        <a class="talk" href="#contact">Let&rsquo;s Talk &#8599;</a>
+        <button
+          class="menu"
+          id="menu"
+          type="button"
+          aria-expanded="false"
+          aria-controls="nav"
+          aria-label="Menu"
+        >
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+    <div class="wrap">
+      <header class="hero">
+        <div class="build">
+          <h1 class="sr">Process</h1>
+          <canvas id="build" aria-hidden="true"></canvas>
+        </div>
+        <h3>
+          You may be wondering how to contact us, or how we build a website.
+        </h3>
+        <p class="lead">
+          This page explains our process. We follow several steps to deliver a
+          high-quality website that meets your needs.
+        </p>
+      </header>
+
+      <section id="steps">
+        <h2>From first call to launch, and beyond</h2>
+        <p class="row-hint">Scroll sideways to see all ten steps.</p>
+        <ol class="steps" tabindex="0" aria-label="Our ten-step process">
+          <li>
+            <b>1</b>
+            <h3>Discovery</h3>
+            <p>
+              We work closely with you to understand your business goals, target
+              audience, and specific requirements for the website.
+            </p>
+          </li>
+          <li>
+            <b>2</b>
+            <h3>Planning</h3>
+            <p>
+              We create a detailed project plan that outlines the site
+              structure, features, and timeline. It serves as a roadmap for
+              development.
+            </p>
+          </li>
+          <li>
+            <b>3</b>
+            <h3>Design</h3>
+            <p>
+              Our design team creates attractive, user-friendly designs that
+              match your brand identity. You review mockups and prototypes and
+              give feedback.
+            </p>
+          </li>
+          <li>
+            <b>4</b>
+            <h3>Development</h3>
+            <p>
+              Our developers bring the designs to life using modern technologies
+              and best practices. The site is responsive, fast, and secure.
+            </p>
+          </li>
+          <li>
+            <b>5</b>
+            <h3>Testing</h3>
+            <p>
+              Before launch, we test thoroughly for bugs: functionality,
+              performance, and cross-browser compatibility.
+            </p>
+          </li>
+          <li>
+            <b>6</b>
+            <h3>Launch</h3>
+            <p>
+              Once the site is tested and approved, we launch it. We make the
+              transition smooth and give you documentation and training.
+            </p>
+          </li>
+          <li class="paid">
+            <b>7</b>
+            <h3>Maintenance</h3>
+            <p>
+              After launch, we offer ongoing support to keep your site up to
+              date, secure, and fast: regular updates, backups, and monitoring.
+            </p>
+          </li>
+          <li>
+            <b>8</b>
+            <h3>Feedback and iteration</h3>
+            <p>
+              We value your feedback and use it to keep improving our services
+              and your website.
+            </p>
+          </li>
+          <li>
+            <b>9</b>
+            <h3>Continuous improvement</h3>
+            <p>
+              We keep up with the latest trends and technologies in web
+              development, and refine our process to deliver innovative
+              solutions.
+            </p>
+          </li>
+          <li>
+            <b>10</b>
+            <h3>Client satisfaction</h3>
+            <p>
+              Our ultimate goal is your satisfaction. We work with you
+              throughout so that your vision is realized and you are happy with
+              the result.
+            </p>
+          </li>
+        </ol>
+        <p class="note">
+          Note: Every steps (FEATURES) are not offered with every priced website
+          package. It depends on the package you choose. We will discuss this with you in step 1, and confirm it in the project plan in step 2.
+        </p>
+        <p class="done">Now you are good to go!</p>
+      </section>
+
+      <section>
+        <div class="two">
+          <div class="panel">
+            <h2>How will we contact you?</h2>
+            <p>
+              The answer is pretty simple. Where our team is present, we will
+              come to you in person. Where it is not, we will contact you
+              through the channels you give us: email, phone, or social media.
+            </p>
+            <p>
+              We keep communication smooth and efficient, so you can reach us
+              easily whenever you need help or have questions about your
+              website.
+            </p>
+          </div>
+          <div class="panel">
+            <h2>How will you know we are genuine?</h2>
+            <p>The answer is pretty simple. We will provide:</p>
+            <ul class="tick">
+              <li>A portfolio of live websites you can open and test</li>
+              <li>Client references you can call or email</li>
+              <li>A written contract with scope, price, and timeline</li>
+              <li>Regular progress updates at every step</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>What our clients say</h2>
+        <div class="two">
+          <div class="panel">
+            <span class="tag"
+              >Placeholder: replace with a real testimonial</span
+            >
+            <blockquote>
+              “Add a short, real quote from a past client about the process and
+              the result.”
+            </blockquote>
+            <cite>Client name, Business</cite>
+          </div>
+          <div class="panel">
+            <span class="tag"
+              >Placeholder: replace with a real testimonial</span
+            >
+            <blockquote>
+              “Add a second quote, ideally mentioning communication or support
+              after launch.”
+            </blockquote>
+            <cite>Client name, Business</cite>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Case studies and credentials</h2>
+        <div class="two">
+          <div class="panel">
+            <h3>Case study</h3>
+            <p>
+              <b>Client:</b> [name] &middot; <b>Goal:</b> [e.g. more online
+              bookings] &middot; <b>Result:</b> [e.g. +40% enquiries in 3
+              months]. Add a link to the full story.
+            </p>
+          </div>
+          <div class="panel">
+            <h3>Certifications and awards</h3>
+            <p>
+              List only credentials your team actually holds, for example a
+              certification, an award, or a partner badge, with the year and
+              issuer.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Frequently asked questions</h2>
+        <details>
+          <summary>How long does a website take?</summary>
+          <p>
+            It depends on size and features. The project plan in step 2 gives
+            you a clear timeline before work begins.
+          </p>
+        </details>
+        <details>
+          <summary>Can I change things after the design is approved?</summary>
+          <p>
+            Small changes are easy. Larger changes may affect the timeline or
+            price, and we will tell you before we start.
+          </p>
+        </details>
+        <details>
+          <summary>What happens after launch?</summary>
+          <p>
+            You get documentation and training, plus ongoing maintenance:
+            updates, backups, and monitoring.
+          </p>
+        </details>
+        <details>
+          <summary>Who owns the website?</summary>
+          <p>
+            State your ownership terms here, and match them to your contract.
+          </p>
+        </details>
+      </section>
+
+      <section class="cta">
+        <h2>Ready to start your website?</h2>
+        <p>
+          Book a free consultation and we will walk you through the first step.
+        </p>
+        <a class="btn" href="#contact">Book a consultation</a
+        ><a class="btn alt" href="#steps">Review the process</a>
+      </section>
+    </div>
+    <script>
+      (function () {
+        var cv = document.getElementById("build"),
+          ctx = cv.getContext("2d");
+        var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+        var blocks = [],
+          W,
+          H,
+          S,
+          raf,
+          t0,
+          TOTAL;
+
+        function setup() {
+          var dpr = window.devicePixelRatio || 1;
+          W = cv.clientWidth;
+          H = cv.clientHeight;
+          cv.width = W * dpr;
+          cv.height = H * dpr;
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+          var fs = Math.min(H * 1.05, W / 4.1);
+          var off = document.createElement("canvas");
+          off.width = W;
+          off.height = H;
+          var o = off.getContext("2d");
+          o.font = "800 " + fs + 'px "Bricolage Grotesque",Figtree,sans-serif';
+          o.textBaseline = "middle";
+          o.fillText("Process", 0, H / 2);
+          var data = o.getImageData(0, 0, W, H).data;
+          S = Math.max(5, Math.round(fs / 24));
+          blocks = [];
+          for (var y = 0; y < H; y += S)
+            for (var x = 0; x < W; x += S) {
+              if (data[((y + (S >> 1)) * W + x + (S >> 1)) * 4 + 3] > 128) {
+                blocks.push({
+                  x: x,
+                  y: y,
+                  d: (x / W) * 2200 + (1 - y / H) * 400 + Math.random() * 500,
+                  h: 90 + Math.random() * 220,
+                });
+              }
+            }
+          TOTAL = 2200 + 400 + 500 + 750;
+        }
+
+        function draw(now) {
+          var el = reduce ? TOTAL : now - t0,
+            done = 0;
+          ctx.clearRect(0, 0, W, H);
+          var g = ctx.createLinearGradient(0, 0, W, 0);
+          g.addColorStop(0, "#eef0ff");
+          g.addColorStop(0.6, "#c9bfff");
+          g.addColorStop(1, "#5de0c0");
+          for (var i = 0; i < blocks.length; i++) {
+            var b = blocks[i],
+              t = (el - b.d) / 700;
+            if (t <= 0) {
+              // blueprint outline where the block will go
+              ctx.strokeStyle = "rgba(139,108,255,.35)";
+              ctx.lineWidth = 1;
+              ctx.strokeRect(b.x + 0.5, b.y + 0.5, S - 2, S - 2);
+              continue;
+            }
+            if (t >= 1) {
+              done++;
+              ctx.fillStyle = g;
+              ctx.fillRect(b.x, b.y, S - 1, S - 1);
+              continue;
+            }
+            var e = 1 - Math.pow(1 - t, 3);
+            ctx.globalAlpha = t;
+            ctx.fillStyle = "#ffb454";
+            ctx.fillRect(b.x, b.y - (1 - e) * b.h, S - 1, S - 1);
+            ctx.globalAlpha = 1;
+          }
+          if (el < TOTAL && !reduce) raf = requestAnimationFrame(draw);
+        }
+
+        // The build starts immediately on load, then repeats every 8 seconds.
+        var DELAY = 8,
+          timer;
+        function play() {
+          clearTimeout(timer);
+          cancelAnimationFrame(raf);
+          setup();
+          t0 = performance.now();
+          raf = requestAnimationFrame(draw);
+          if (!reduce) timer = setTimeout(play, DELAY * 1000);
+        }
+        var rt;
+        addEventListener("resize", function () {
+          clearTimeout(rt);
+          rt = setTimeout(function () {
+            if (cv.clientWidth === W) return; // ignore phone address-bar resizes
+            cancelAnimationFrame(raf);
+            setup();
+            t0 = performance.now() - TOTAL - 1;
+            draw(performance.now());
+          }, 200);
+        });
+        (document.fonts && document.fonts.load
+          ? document.fonts.load('800 100px "Bricolage Grotesque"')
+          : Promise.resolve()
+        ).then(play, play);
+      })();
+    </script>
+    <script>
+      (function () {
+        var m = document.getElementById("menu"),
+          n = document.getElementById("nav");
+        function set(o) {
+          n.classList.toggle("open", o);
+          m.setAttribute("aria-expanded", o);
+        }
+        m.addEventListener("click", function () {
+          set(!n.classList.contains("open"));
+        });
+        n.addEventListener("click", function (e) {
+          if (e.target.tagName === "A") set(false);
+        });
+      })();
+    </script>
+  </body>
+</html>
